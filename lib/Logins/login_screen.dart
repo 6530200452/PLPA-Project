@@ -37,15 +37,16 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.grey[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          title: Text('Login Error', style: TextStyle(color: Colors.red[700])),
-          content: Text(message),
+          title: Text('Login Error!', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[700])),
+          content: Text(message, style: TextStyle(color: Colors.white)),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK', style: TextStyle(color: Colors.green[800])),
+              child: Text('OK', style: TextStyle(color: Colors.yellow[700])),
             ),
           ],
         );
@@ -56,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
+      backgroundColor: Colors.grey[900],
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -66,20 +67,21 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundColor: Colors.green[300],
-                  child: Icon(Icons.note, size: 50, color: Colors.white),
+                  backgroundColor: Colors.yellow[700],
+                  child: Icon(Icons.note, size: 50, color: Colors.black),
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'Welcome to NoteApp',
+                  'Welcome to PLPA!',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green[800],
+                    color: Colors.yellow,
                   ),
                 ),
                 SizedBox(height: 20),
                 Card(
+                  color: Colors.grey[800],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -92,14 +94,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _usernameController,
                           decoration: InputDecoration(
                             labelText: 'Email',
-                            prefixIcon: Icon(
-                              Icons.email,
-                              color: Colors.green[700],
-                            ),
+                            labelStyle: TextStyle(color: Colors.yellow),
+                            prefixIcon: Icon(Icons.email, color: Colors.yellow),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
+                          style: TextStyle(color: Colors.white),
                         ),
                         SizedBox(height: 15),
                         TextField(
@@ -107,25 +108,24 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: true,
                           decoration: InputDecoration(
                             labelText: 'Password',
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Colors.green[700],
-                            ),
+                            labelStyle: TextStyle(color: Colors.yellow),
+                            prefixIcon: Icon(Icons.lock, color: Colors.yellow),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
+                          style: TextStyle(color: Colors.white),
                         ),
                         SizedBox(height: 20),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: _login,
-                            icon: Icon(Icons.login, color: Colors.white),
+                            icon: Icon(Icons.login, color: Colors.black),
                             label: Text('Login'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green[700],
-                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.yellow[700],
+                              foregroundColor: Colors.black,
                               padding: EdgeInsets.symmetric(vertical: 15),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             "Don't have an account? Register",
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.green[800],
+                              color: Colors.yellow,
                             ),
                           ),
                         ),

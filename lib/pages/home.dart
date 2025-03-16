@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:noteapp/services/addForm_day.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../services/updateForm.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -22,6 +25,9 @@ class _HomeState extends State<Home> {
     String title,
     String topic,
     String content,
+    double rating,
+    String date, 
+    
   ) {
     showDialog(
       context: context,
@@ -34,9 +40,10 @@ class _HomeState extends State<Home> {
             title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.green[900],
+              color: Colors.yellow[900],
             ),
           ),
+          
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,19 +57,58 @@ class _HomeState extends State<Home> {
                   Expanded(
                     child: Text(
                       topic,
-                      style: TextStyle(fontSize: 14, color: Colors.black87),
+                      style: TextStyle(fontSize: 14, color: Colors.black87,fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 10),
+
               Text(content),
+
+              SizedBox(height: 30),
+              Center(
+                child: Text(
+                  "Rating ",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+              Center(
+                child:
+                    rating > 0
+                        ? Row(
+                          mainAxisSize:
+                              MainAxisSize.min,
+                          children: List.generate(
+                            rating.toInt(),
+                            (index) =>
+                                Icon(Icons.star, color: Colors.amber, size: 24),
+                          ),
+                        )
+                        : Text(
+                          "No Rating",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+              ),
+
+              SizedBox(height: 10),
+
+              Center(
+                child: Text(
+                "Date: $date",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              ) 
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close', style: TextStyle(color: Colors.green[800])),
+              child: Text('Close', style: TextStyle(color: Colors.yellow[800])),
             ),
           ],
         );
@@ -73,7 +119,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
+      backgroundColor: Colors.grey[900],
       body: StreamBuilder(
         stream: postCollection.snapshots(),
         builder: (context, snapshot) {
@@ -82,11 +128,11 @@ class _HomeState extends State<Home> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text("เกิดข้อผิดพลาด: ${snapshot.error}"));
+            return Center(child: Text("Error ${snapshot.error}",style: GoogleFonts.prompt(fontSize: 18, color: Colors.yellow[700])));
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("ไม่มีข้อมูล"));
+            return Center(child: Text("No posts available",style: GoogleFonts.prompt(fontSize: 18, color: Colors.yellow[700])));
           }
 
           return ListView.builder(
@@ -111,17 +157,6 @@ class _HomeState extends State<Home> {
                 ),
                 elevation: 5,
                 child: Slidable(
-                  startActionPane: ActionPane(
-                    motion: DrawerMotion(),
-                    children: [
-                      SlidableAction(
-                        onPressed: (context) {},
-                        backgroundColor: Colors.blue,
-                        icon: Icons.share,
-                        label: 'แชร์',
-                      ),
-                    ],
-                  ),
                   endActionPane: ActionPane(
                     motion: StretchMotion(),
                     children: [
@@ -151,13 +186,35 @@ class _HomeState extends State<Home> {
                   ),
                   child: ListTile(
                     title: Text(
-                      postIndex['Name'] ?? 'No Name',
+                      data.containsKey('Name') ? postIndex['Name'] : 'No Name',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.green[900],
                       ),
                     ),
-                    subtitle: Text(postIndex['Topic'] ?? 'Unknown Topic'),
+
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(data.containsKey('Topic') ? postIndex['Topic'] : 'No Topic',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14, 
+                            color: Colors.black87,
+                          ) ,
+                        ),
+                        Text(
+                          data.containsKey('Date')
+                              ? postIndex['Date']
+                              : 'No Date',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ],
+                    ),
+
                     trailing: GestureDetector(
                       onTap: () {
                         appState.toggleFavorite(postIndex.id);
@@ -169,11 +226,13 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     onTap: () {
-                      String title = postIndex['Name'] ?? 'No Name';
-                      String topic = postIndex['Topic'] ?? 'No Topic';
-                      String content =
-                          postIndex['Content'] ?? 'No Content Available';
-                      showContentPopup(context, title, topic, content);
+                      String title = data.containsKey('Name') ? postIndex['Name'] : 'No Name';
+                      String topic = data.containsKey('Topic') ? postIndex['Topic'] : 'No Topic';
+                      String content = data.containsKey('Content') ? postIndex['Content'] : 'No Content Available';
+                      double rating = data.containsKey('rating') ? (data['rating'] as num).toDouble() : 0.0;
+                      String date = data.containsKey('Date') ? postIndex['Date'] : 'No Date';
+                      print("Rating from Firestore: $rating");
+                      showContentPopup(context, title, topic, content, rating, date); 
                     },
                   ),
                 ),
@@ -182,6 +241,22 @@ class _HomeState extends State<Home> {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => addFormDay()),
+        );
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Icon(Icons.add, color: Colors.black, size: 32),
+      backgroundColor: Colors.yellow[700],
+      elevation: 10,
+      splashColor: Colors.orangeAccent,
+    ),
+
     );
   }
 }

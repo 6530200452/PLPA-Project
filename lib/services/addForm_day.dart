@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class addForm extends StatefulWidget {
+class addFormDay extends StatefulWidget {
   @override
-  State<addForm> createState() => _addFormState();
+  State<addFormDay> createState() => _addFormDayState();
 }
 
-class _addFormState extends State<addForm> {
+class _addFormDayState extends State<addFormDay> {
   final topicController = TextEditingController();
   final contentController = TextEditingController();
 
@@ -28,6 +29,23 @@ class _addFormState extends State<addForm> {
     Color(0xFFF5FFFA), // Mint Cream
     Color(0xFFFFF5EE), // Seashell
   ];
+  double rating = 0.0;
+
+  DateTime? selectedDate;
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +55,7 @@ class _addFormState extends State<addForm> {
         backgroundColor: Colors.yellow[700],
         title: Text(
           'Add New Post',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -53,13 +71,13 @@ class _addFormState extends State<addForm> {
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: Colors.yellow,
+                  color: Colors.yellow[800],
                 ),
               ),
               SizedBox(height: 20),
               Text(
                 'Select Emotion',
-                style: TextStyle(fontSize: 18, color: Colors.yellow),
+                style: TextStyle(fontSize: 18, color: Colors.yellow[800]),
               ),
               SizedBox(height: 10),
               GridView.builder(
@@ -82,13 +100,24 @@ class _addFormState extends State<addForm> {
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color:
-                            selectedEmoji == emojis[index] ? Colors.yellow[100] : Colors.white,
+                            selectedEmoji == emojis[index]
+                                ? Colors.yellow[100]
+                                : Colors.white,
                         border: Border.all(
                           color:
-                              selectedEmoji == emojis[index] ? Colors.yellow[800]! : Colors.grey,
+                              selectedEmoji == emojis[index]
+                                  ? Colors.yellow[800]!
+                                  : Colors.grey,
                           width: 2.0,
                         ),
                         borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
                       ),
                       child: Center(
                         child: Text(
@@ -103,7 +132,7 @@ class _addFormState extends State<addForm> {
               SizedBox(height: 20),
               Text(
                 'Select Background Color',
-                style: TextStyle(fontSize: 18, color: Colors.yellow),
+                style: TextStyle(fontSize: 18, color: Colors.yellow[800]),
               ),
               SizedBox(height: 10),
               GridView.builder(
@@ -128,23 +157,48 @@ class _addFormState extends State<addForm> {
                         color: colors[index],
                         border: Border.all(
                           color:
-                              selectedColor == colors[index] ? Colors.black : Colors.grey,
+                              selectedColor == colors[index]
+                                  ? Colors.yellow[800]!
+                                  : Colors.grey,
                           width: 2.0,
                         ),
                         borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
               ),
               SizedBox(height: 20),
+              Text(
+                'Select Date',
+                style: TextStyle(fontSize: 18, color: Colors.yellow[800]),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => selectDate(context),
+                child: Text(
+                  selectedDate == null
+                      ? 'Choose Date'
+                      : 'Selected Date: ${selectedDate!.toLocal()}'.split(' ')[0],
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              SizedBox(height: 20),
+
               TextFormField(
                 controller: topicController,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: 'Add Topic',
-                  labelStyle: TextStyle(color: Colors.yellow),
-                  prefixIcon: Icon(Icons.person, color: Colors.yellow),
+                  labelStyle: TextStyle(color: Colors.yellow[800]),
+                  prefixIcon: Icon(Icons.person, color: Colors.yellow[800]),
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -155,23 +209,53 @@ class _addFormState extends State<addForm> {
                 maxLines: 3,
                 decoration: InputDecoration(
                   labelText: 'Add Content',
-                  labelStyle: TextStyle(color: Colors.yellow),
-                  prefixIcon: Icon(Icons.description, color: Colors.yellow),
+                  labelStyle: TextStyle(color: Colors.yellow[800]),
+                  prefixIcon: Icon(Icons.description, color: Colors.yellow[800]),
                   border: OutlineInputBorder(),
                 ),
               ),
-              
-              SizedBox(height: 15),
+              SizedBox(height: 20),
+
+              Center(
+              child: Text(
+                'Rate Your Impress',
+                style: TextStyle(fontSize: 18, color: Colors.yellow[800] ,fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            SizedBox(height: 8),
+
+              Center(
+                child: RatingBar.builder(
+                  initialRating: rating,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: false,
+                  itemCount: 5,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder:
+                      (context, _) => Icon(Icons.star, color: Colors.amber),
+                  onRatingUpdate: (newRating) {
+                    setState(() {
+                      rating = newRating;
+                    });
+                  },
+                ),
+            ),
+
+            SizedBox(height: 15),
 
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
                     postCollection.add({
+                      'rating': rating,
                       'Name': selectedEmoji,
                       'Topic': topicController.text,
                       'Content': contentController.text,
                       'BackgroundColor': selectedColor.value,
+                      'Date': selectedDate?.toIso8601String().split("T")[0], // บันทึกค่า date
                     });
                     Navigator.pop(context);
                   },

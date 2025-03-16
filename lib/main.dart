@@ -6,8 +6,8 @@ import './Logins/registor_screen.dart';
 import './pages/home.dart';
 import './pages/favorite.dart';
 import './pages/person.dart';
-import './services/addForm.dart';
 import './pages/search_screen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,14 +19,14 @@ void main() async {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Roboto',
-          primarySwatch: Colors.green,
-          scaffoldBackgroundColor: Colors.green[50],
+          primarySwatch: Colors.yellow,
+          scaffoldBackgroundColor: Colors.black,
           appBarTheme: AppBarTheme(
-            backgroundColor: Colors.greenAccent,
+            backgroundColor: Colors.yellow[700],
             titleTextStyle: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
         ),
@@ -68,12 +68,13 @@ class MyAppState extends State<MyApp> with ChangeNotifier {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-          content: Text(content),
+          backgroundColor: Colors.grey[900],
+          title: Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.yellow)),
+          content: Text(content, style: TextStyle(color: Colors.white)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close'),
+              child: Text('Close', style: TextStyle(color: Colors.yellow[700])),
             ),
           ],
         );
@@ -85,65 +86,65 @@ class MyAppState extends State<MyApp> with ChangeNotifier {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(left: 40),
-          child: Center(child: Text('App Notes!')),
+      automaticallyImplyLeading: false,
+      title: Text(
+        'PLPA!',
+        style: TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+          letterSpacing: 1.5,
         ),
-        backgroundColor: Colors.lightGreen,
-        elevation: 5,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
-            onPressed: () {
-              showSearch(context: context, delegate: SearchScreen());
-            },
-          ),
-        ],
       ),
+  centerTitle: true,
+  backgroundColor: Colors.yellow[700],
+  elevation: 10,
+  shadowColor: Colors.black54,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      bottom: Radius.circular(25),
+    ),
+  ),
+  actions: [
+    Container(
+      width: 35,
+      height: 35,
+      margin: EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(Icons.search, color: Colors.black, size: 20),
+        onPressed: () {
+          showSearch(context: context, delegate: SearchScreen());
+        },
+      ),
+    ),
+  ],
+),
+
+
       body: mobileScreens[screenIndex],
-      floatingActionButton: Stack(
-        children: [
-          Positioned(
-            bottom: 80,
-            right: 20,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => addForm()),
-                ).then((_) {
-                  setState(() {
-                    screenIndex = 0;
-                  });
-                });
-              },
-              shape: CircleBorder(),
-              backgroundColor: Colors.green[700],
-              child: Icon(Icons.add, color: Colors.white, size: 28),
-            ),
-          ),
-        ],
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.lightGreen,
-        selectedItemColor: Colors.green[900],
-        unselectedItemColor: Colors.white,
-        currentIndex: screenIndex,
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.grey[900]!,
+        color: Colors.yellow[700]!,
+        buttonBackgroundColor: Colors.black,
+        height: 60,
+        animationDuration: Duration(milliseconds: 300),
+        index: screenIndex,
         onTap: (index) {
           setState(() {
             screenIndex = index;
           });
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorite',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          Icon(Icons.home, size: 30, color: Colors.white),
+          Icon(Icons.favorite, size: 30, color: Colors.white),
+          Icon(Icons.person, size: 30, color: Colors.white),
         ],
-      ),
+      )
     );
   }
 }

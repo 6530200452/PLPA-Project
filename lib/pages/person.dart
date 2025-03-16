@@ -22,7 +22,7 @@ class _PersonState extends State<Person> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
+      backgroundColor: Colors.grey[900],
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -30,7 +30,7 @@ class _PersonState extends State<Person> {
             SizedBox(height: 20),
             CircleAvatar(
               radius: 65,
-              backgroundColor: Colors.green[300],
+              backgroundColor: Colors.yellow[300],
               child: CircleAvatar(
                 radius: 60,
                 backgroundImage: AssetImage('assets/profile.png'),
@@ -42,13 +42,13 @@ class _PersonState extends State<Person> {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.green[800],
+                color: Colors.yellow[800],
               ),
             ),
             SizedBox(height: 10),
             Text(
               user?.email ?? 'No Email',
-              style: TextStyle(fontSize: 18, color: Colors.green[700]),
+              style: TextStyle(fontSize: 18, color: Colors.yellow[700]),
             ),
             SizedBox(height: 20),
             Divider(thickness: 1.5, color: Colors.grey[400]),
@@ -61,10 +61,10 @@ class _PersonState extends State<Person> {
               child: Column(
                 children: [
                   ListTile(
-                    leading: Icon(Icons.settings, color: Colors.green[800]),
+                    leading: Icon(Icons.settings, color: const Color.fromARGB(255, 252, 118, 0)),
                     title: Text(
                       'Change Name',
-                      style: TextStyle(fontSize: 18, color: Colors.green[800]),
+                      style: TextStyle(fontSize: 18, color: const Color.fromARGB(255, 255, 119, 0)),
                     ),
                     onTap: () async {
                       await Navigator.push(
@@ -136,7 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Profile Updated Successfully'),
-          backgroundColor: Colors.green[700],
+          backgroundColor: Colors.yellow[700],
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -147,14 +147,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
+      backgroundColor: Colors.grey[900],
       appBar: AppBar(
         title: Text(
           'Change Name',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
-        backgroundColor: Colors.green[700],
+        backgroundColor: Colors.yellow[700],
         elevation: 4,
       ),
       body: Center(
@@ -175,7 +175,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.green[800],
+                      color: Colors.yellow[800],
                     ),
                   ),
                   SizedBox(height: 20),
@@ -183,7 +183,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person, color: Colors.green),
+                      labelStyle: TextStyle(color: Colors.yellow[800]),
+                      prefixIcon: Icon(Icons.person, color: Colors.yellow[800]),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -194,7 +195,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      prefixIcon: Icon(Icons.email, color: Colors.grey),
+                      labelStyle: TextStyle(color: Colors.yellow[800]),
+                      prefixIcon: Icon(Icons.email, color: Colors.yellow[800]),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -209,7 +211,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icon(Icons.save, color: Colors.white),
                       label: Text('Save Changes'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[700],
+                        backgroundColor: Colors.yellow[700],
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
